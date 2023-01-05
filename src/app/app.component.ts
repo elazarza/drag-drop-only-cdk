@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
 import {
   CdkDragDrop,
   CdkDragEnter,
@@ -11,9 +17,10 @@ import { NgxMasonryComponent } from 'ngx-masonry';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
   @ViewChild('masonry', { read: NgxMasonryComponent })
   masonry: NgxMasonryComponent;
+  emptyItem;
   public items: Array<any> = [
     { item: 1, size: 'normal' },
     { item: 2, size: 'normal' },
@@ -36,8 +43,12 @@ export class AppComponent {
     stagger: 500,
   };
   constructor(private cdr: ChangeDetectorRef) {}
+  ngAfterViewInit() {
+    this.masonry.reloadItems();
+    this.masonry.layout();
+  }
   add() {
-    this.items.push(this.items.length + 1);
+    this.items.push({ item: this.items.length + 1, size: 'normal' });
   }
 
   shuffle() {
